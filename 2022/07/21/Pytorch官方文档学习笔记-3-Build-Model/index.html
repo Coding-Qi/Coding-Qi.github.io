@@ -16,34 +16,19 @@
   <meta name="author" content="Qi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1. 建立神经网络​    torch.nn 提供了构建神经网络所需的所有构建块。PyTorch 中的每个模块都是 nn.Module 的子类。 ​	在接下来的部分中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。 12345import osimport torchfrom torch import nnfrom torch.utils.data import D">
+    <meta name="description" content="1. 建立神经网络torch.nn 提供了构建神经网络所需的所有构建块。PyTorch中的每个模块都是 nn.Module 的子类。 在接下来的部分中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。 12345import osimport torchfrom torch import nnfrom torch.utils.data import DataLoade">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pytorch官方文档学习笔记_3_Build Model">
 <meta property="og:url" content="http://example.com/2022/07/21/Pytorch%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3-Build-Model/index.html">
 <meta property="og:site_name" content="淇水汤汤">
-<meta property="og:description" content="1. 建立神经网络​    torch.nn 提供了构建神经网络所需的所有构建块。PyTorch 中的每个模块都是 nn.Module 的子类。 ​	在接下来的部分中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。 12345import osimport torchfrom torch import nnfrom torch.utils.data import D">
+<meta property="og:description" content="1. 建立神经网络torch.nn 提供了构建神经网络所需的所有构建块。PyTorch中的每个模块都是 nn.Module 的子类。 在接下来的部分中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。 12345import osimport torchfrom torch import nnfrom torch.utils.data import DataLoade">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="http://example.com/Picture/gif.gif">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
 <meta property="article:published_time" content="2022-07-21T09:42:22.000Z">
-<meta property="article:modified_time" content="2022-07-21T09:43:33.821Z">
+<meta property="article:modified_time" content="2022-07-21T11:13:53.179Z">
 <meta property="article:author" content="Qi">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==">
   
   
   
@@ -289,58 +274,46 @@
             
               <div class="markdown-body">
                 
-                <h1 id="1-建立神经网络"><a href="#1-建立神经网络" class="headerlink" title="1. 建立神经网络"></a>1. 建立神经网络</h1><p>​    <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/nn.html">torch.nn</a> 提供了构建神经网络所需的所有构建块。PyTorch 中的每个模块都是 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html">nn.Module</a> 的子类。</p>
-<p>​	在接下来的部分中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。</p>
+                <h1 id="1-建立神经网络"><a href="#1-建立神经网络" class="headerlink" title="1. 建立神经网络"></a>1. 建立神经网络</h1><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/nn.html">torch.nn</a> 提供了构建神经网络所需的所有构建块。PyTorch中的每个模块都是 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html">nn.Module</a> 的子类。</p>
+<p>在接下来的部分中，我们将构建一个神经网络来对 FashionMNIST 数据集中的图像进行分类。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><span class="hljs-keyword">from</span> torch.utils.data <span class="hljs-keyword">import</span> DataLoader<br><span class="hljs-keyword">from</span> torchvision <span class="hljs-keyword">import</span> datasets, transforms<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h1 id="2-获取训练设备"><a href="#2-获取训练设备" class="headerlink" title="2. 获取训练设备"></a>2. 获取训练设备</h1><p>​    我们通常希望能够在GPU等硬件加速器（如果可用）上训练模型。首先检查一下 torch.cuda 是否可用，否则就继续使用CPU。</p>
+<h1 id="2-获取训练设备"><a href="#2-获取训练设备" class="headerlink" title="2. 获取训练设备"></a>2. 获取训练设备</h1><p>我们通常希望能够在GPU等硬件加速器（如果可用）上训练模型。首先检查一下 torch.cuda 是否可用，否则就继续使用CPU。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">device = <span class="hljs-string">&quot;cuda&quot;</span> <span class="hljs-keyword">if</span> torch.cuda.is_available() <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;cpu&quot;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h1 id="3-定义类"><a href="#3-定义类" class="headerlink" title="3. 定义类"></a>3. 定义类</h1><p>​    我们通过子类化 <strong>nn.Module</strong> 来定义我们的神经网络，并在 <strong><strong>init</strong></strong> 中初始化神经网络层。每个 <strong>nn.Module</strong> 子类都在 <strong>forward</strong> 方法中实现对输入数据的操作。</p>
+<h1 id="3-定义类"><a href="#3-定义类" class="headerlink" title="3. 定义类"></a>3. 定义类</h1><p>我们通过子类化 <strong>nn.Module</strong> 来定义我们的神经网络，并在 <strong><strong>init</strong></strong> 中初始化神经网络层。每个 <strong>nn.Module</strong> 子类都在 <strong>forward</strong> 方法中实现对输入数据的操作。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">NeuralNetwork</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(NeuralNetwork, self).__init__()<br>        self.flatten = nn.Flatten()<br>        self.linear_relu_stack = nn.Sequential(<br>            nn.Linear(<span class="hljs-number">28</span>*<span class="hljs-number">28</span>, <span class="hljs-number">512</span>),<br>            nn.ReLU(),<br>            nn.Linear(<span class="hljs-number">512</span>, <span class="hljs-number">512</span>),<br>            nn.ReLU(),<br>            nn.Linear(<span class="hljs-number">512</span>, <span class="hljs-number">10</span>),<br>        )<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        x = self.flatten(x)<br>        logits = self.linear_relu_stack(x)<br>        <span class="hljs-keyword">return</span> logits<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<p>​     我们创建一个 <strong>NeuralNetwork</strong> 实例，并将其移动到 <strong>device</strong> 上，并打印其结构。</p>
+<p>我们创建一个 <strong>NeuralNetwork</strong> 实例，并将其移动到 <strong>device</strong> 上，并打印其结构。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python">model = NeuralNetwork().to(device)<br><span class="hljs-built_in">print</span>(model)<br><br>out: <br>&gt;&gt; NeuralNetwork(<br>     (flatten): Flatten(start_dim=<span class="hljs-number">1</span>, end_dim=-<span class="hljs-number">1</span>)<br>     (linear_relu_stack): Sequential(<br>       (<span class="hljs-number">0</span>): Linear(in_features=<span class="hljs-number">784</span>, out_features=<span class="hljs-number">512</span>, bias=<span class="hljs-literal">True</span>)<br>       (<span class="hljs-number">1</span>): ReLU()<br>       (<span class="hljs-number">2</span>): Linear(in_features=<span class="hljs-number">512</span>, out_features=<span class="hljs-number">512</span>, bias=<span class="hljs-literal">True</span>)<br>       (<span class="hljs-number">3</span>): ReLU()<br>       (<span class="hljs-number">4</span>): Linear(in_features=<span class="hljs-number">512</span>, out_features=<span class="hljs-number">10</span>, bias=<span class="hljs-literal">True</span>)<br>     )<br>   )<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<p>​    要使用模型，我们将输入数据传递给它。这将执行模型的转发，以及一些后台操作。</p>
-<p>​    注意：请不要直接调用 <strong>model.forward()</strong> ！</p>
-<p>​    在输入上调用模型会返回一个 10 维张量，其中包含每个类的原始预测值。我们通过一个 <strong>nn.Softmax</strong> 模块的实例来获得预测概率。</p>
+<p>要使用模型，我们将输入数据传递给它。这将执行模型的转发，以及一些后台操作。</p>
+<p>注意：请不要直接调用 <strong>model.forward()</strong> ！</p>
+<p>在输入上调用模型会返回一个 10 维张量，其中包含每个类的原始预测值。我们通过一个 <strong>nn.Softmax</strong> 模块的实例来获得预测概率。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">X = torch.rand(<span class="hljs-number">1</span>, <span class="hljs-number">28</span>, <span class="hljs-number">28</span>, device=device)<br>logits = model(X)<br>pred_probab = nn.Softmax(dim=<span class="hljs-number">1</span>)(logits)<br>y_pred = pred_probab.argmax(<span class="hljs-number">1</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Predicted class: <span class="hljs-subst">&#123;y_pred&#125;</span>&quot;</span>)<br><br>out: <br>&gt;&gt; Predicted <span class="hljs-keyword">class</span>: tensor([<span class="hljs-number">9</span>], device=<span class="hljs-string">&#x27;cuda:0&#x27;</span>)<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h1 id="4-模型层"><a href="#4-模型层" class="headerlink" title="4. 模型层"></a>4. 模型层</h1><p>​    让我们分解 FashionMNIST 模型中的层。为了方便说明，我们将抽取 3 张大小为 28x28 的图像的小批量样本，看看当我们通过网络传递它时会发生什么。</p>
+<h1 id="4-模型层"><a href="#4-模型层" class="headerlink" title="4. 模型层"></a>4. 模型层</h1><p>让我们分解 FashionMNIST 模型中的层。为了方便说明，我们将抽取 3 张大小为 28x28 的图像的小批量样本，看看当我们通过网络传递它时会发生什么。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">input_image = torch.rand(<span class="hljs-number">3</span>,<span class="hljs-number">28</span>,<span class="hljs-number">28</span>)<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h2 id="4-1-nn-Flatten"><a href="#4-1-nn-Flatten" class="headerlink" title="4.1 nn.Flatten"></a>4.1 nn.Flatten</h2><p>​    我们初始化 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Flatten.html">nn.Flatten</a> 层以将每个 2D 28x28 图像转换为 784 个像素值的连续数组（保持小批量维度（dim&#x3D;0））。</p>
+<h2 id="4-1-nn-Flatten"><a href="#4-1-nn-Flatten" class="headerlink" title="4.1 nn.Flatten"></a>4.1 nn.Flatten</h2><p>我们初始化 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Flatten.html">nn.Flatten</a> 层以将每个 2D 28x28 图像转换为 784 个像素值的连续数组（保持小批量维度（$dim&#x3D;0$））。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">flatten = nn.Flatten()<br>flat_image = flatten(input_image)<br><span class="hljs-built_in">print</span>(flat_image.size())<br><br>out: <br>&gt;&gt; torch.Size([<span class="hljs-number">3</span>, <span class="hljs-number">784</span>])<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h2 id="4-2-nn-Linear"><a href="#4-2-nn-Linear" class="headerlink" title="4.2 nn.Linear"></a>4.2 nn.Linear</h2><p>​    <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">linear</a> 层是一个使用其存储的权重和偏置对输入进行线性转换的模块，即 <img src="/Picture/gif.gif" srcset="/img/loading.gif" lazyload alt="y=wx+b"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动">编辑。</p>
+<h2 id="4-2-nn-Linear"><a href="#4-2-nn-Linear" class="headerlink" title="4.2 nn.Linear"></a>4.2 nn.Linear</h2><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">linear</a> 层是一个使用其存储的权重和偏置对输入进行线性转换的模块，即 $y&#x3D;wx+b$。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">layer1 = nn.Linear(in_features=<span class="hljs-number">784</span>, out_features=<span class="hljs-number">20</span>)<br>hidden1 = layer1(flat_image)<br><span class="hljs-built_in">print</span>(hidden1.size())<br><br>&gt;&gt; torch.Size([<span class="hljs-number">3</span>, <span class="hljs-number">20</span>])<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h2 id="4-3-nn-ReLU"><a href="#4-3-nn-ReLU" class="headerlink" title="4.3 nn.ReLU"></a>4.3 nn.ReLU</h2><p>​    依靠非线性激活函数可以在模型的输入和输出之间创建复杂映射，在线性变换后应用以引入非线性，可以帮助神经网络学习各种复杂的现象，更多常见的激活函数及其介绍可见<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_60882889/article/details/120502609?spm=1001.2014.3001.5501">这里</a>。</p>
+<h2 id="4-3-nn-ReLU"><a href="#4-3-nn-ReLU" class="headerlink" title="4.3 nn.ReLU"></a>4.3 nn.ReLU</h2><p>依靠非线性激活函数可以在模型的输入和输出之间创建复杂映射，在线性变换后应用以引入非线性，可以帮助神经网络学习各种复杂的现象，更多常见的激活函数及其介绍可见<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_60882889/article/details/120502609?spm=1001.2014.3001.5501">这里</a>。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">hidden1 = nn.ReLU()(hidden1)<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h2 id="4-4-nn-Sequential"><a href="#4-4-nn-Sequential" class="headerlink" title="4.4 nn.Sequential"></a>4.4 nn.Sequential</h2><p>​    <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html">nn.Sequential</a> 是一个有序的模块容器。数据按照定义的顺序通过所有模块，您可以使用顺序容器来组合一个如同 <strong>seq_modules</strong> 的快速网络。</p>
+<h2 id="4-4-nn-Sequential"><a href="#4-4-nn-Sequential" class="headerlink" title="4.4 nn.Sequential"></a>4.4 nn.Sequential</h2><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html">nn.Sequential</a> 是一个有序的模块容器。数据按照定义的顺序通过所有模块，您可以使用顺序容器来组合一个如同 <strong>seq_modules</strong> 的快速网络。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">seq_modules = nn.Sequential(<br>    flatten,<br>    layer1,<br>    nn.ReLU(),<br>    nn.Linear(<span class="hljs-number">20</span>, <span class="hljs-number">10</span>)<br>)<br>input_image = torch.rand(<span class="hljs-number">3</span>,<span class="hljs-number">28</span>,<span class="hljs-number">28</span>)<br>logits = seq_modules(input_image)<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h2 id="4-5-nn-Softmax"><a href="#4-5-nn-Softmax" class="headerlink" title="4.5 nn.Softmax"></a>4.5 nn.Softmax</h2><p>​    上述的神经网络的最后一层的线性层返回了取值在 [-infty, infty] 的未处理的数值 —— <em>logits</em>。将 <em>logits</em> 传给 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">nn.Softmax</a> 模块后取值被缩放到 [0, 1] 内，以表示模型对每个类别的预测概率。<strong>dim</strong> 参数指示维度的数值总和必须为 1 。</p>
+<h2 id="4-5-nn-Softmax"><a href="#4-5-nn-Softmax" class="headerlink" title="4.5 nn.Softmax"></a>4.5 nn.Softmax</h2><p>上述的神经网络的最后一层的线性层返回了取值在 [-infty, infty] 的未处理的数值 —— <em>logits</em>。将 <em>logits</em> 传给 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">nn.Softmax</a> 模块后取值被缩放到 [0, 1] 内，以表示模型对每个类别的预测概率。<strong>dim</strong> 参数指示维度的数值总和必须为 1 。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">softmax = nn.Softmax(dim=<span class="hljs-number">1</span>)<br>pred_probab = softmax(logits)<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
-<h1 id="5-模型参数"><a href="#5-模型参数" class="headerlink" title="5. 模型参数"></a>5. 模型参数</h1><p>​    神经网络中的许多层都是参数化的，即具有在训练期间优化的相关权重和偏差。子类化 nn.Module 会自动跟踪模型对象中定义的所有字段，并使用模型的 parameters() 或 named_parameters() 方法使所有参数都可以访问。</p>
-<p>​    在此示例中，我们遍历每个参数，并打印其大小和其值的预览。</p>
+<h1 id="5-模型参数"><a href="#5-模型参数" class="headerlink" title="5. 模型参数"></a>5. 模型参数</h1><p>神经网络中的许多层都是参数化的，即具有在训练期间优化的相关权重和偏差。子类化 nn.Module 会自动跟踪模型对象中定义的所有字段，并使用模型的 parameters() 或 named_parameters() 方法使所有参数都可以访问。</p>
+<p>在此示例中，我们遍历每个参数，并打印其大小和其值的预览。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Model structure: <span class="hljs-subst">&#123;model&#125;</span>\n\n&quot;</span>)<br><br><span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> model.named_parameters():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Layer: <span class="hljs-subst">&#123;name&#125;</span> | Size: <span class="hljs-subst">&#123;param.size()&#125;</span> | Values : <span class="hljs-subst">&#123;param[:<span class="hljs-number">2</span>]&#125;</span> \n&quot;</span>)<br></code></pre></td></tr></table></figure>
 
-<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" srcset="/img/loading.gif" lazyload alt="点击并拖拽以移动"></p>
 <p>Out： </p>
 <blockquote>
 <p>Model structure: NeuralNetwork(<br>  (flatten): Flatten(start_dim&#x3D;1, end_dim&#x3D;-1)<br>  (linear_relu_stack): Sequential(<br>   (0): Linear(in_features&#x3D;784, out_features&#x3D;512, bias&#x3D;True)<br>   (1): ReLU()<br>   (2): Linear(in_features&#x3D;512, out_features&#x3D;512, bias&#x3D;True)<br>   (3): ReLU()<br>   (4): Linear(in_features&#x3D;512, out_features&#x3D;10, bias&#x3D;True)<br>  )<br> )</p>
@@ -447,12 +420,6 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
-                    
-                      <a href="/2022/07/21/Pytorch%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4-Autograd/" title="Pytorch官方文档学习笔记_4_Autograd">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Pytorch官方文档学习笔记_4_Autograd</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
                     
                   </article>
                   <article class="post-next col-6">
