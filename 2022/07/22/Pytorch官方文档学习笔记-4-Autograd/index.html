@@ -1,0 +1,680 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Qi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 使用 torch.autograd 进行自动微分在训练神经网络时，最常用的算法是反向传播。在该算法中，参数（模型权重）根据损失函数相对于给定参数的梯度进行调整。 为了计算这些梯度，PyTorch 有一个名为 torch.autograd 的内置微分引擎。它支持任何计算图的梯度自动计算。 考虑最简单的一层神经网络，输入 x、参数 w 和 b，以及一些损失函数。它可以通过以下方式在 PyTorc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch官方文档学习笔记_4_Autograd">
+<meta property="og:url" content="http://example.com/2022/07/22/Pytorch%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4-Autograd/index.html">
+<meta property="og:site_name" content="淇水汤汤">
+<meta property="og:description" content="1. 使用 torch.autograd 进行自动微分在训练神经网络时，最常用的算法是反向传播。在该算法中，参数（模型权重）根据损失函数相对于给定参数的梯度进行调整。 为了计算这些梯度，PyTorch 有一个名为 torch.autograd 的内置微分引擎。它支持任何计算图的梯度自动计算。 考虑最简单的一层神经网络，输入 x、参数 w 和 b，以及一些损失函数。它可以通过以下方式在 PyTorc">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-22T12:06:59.000Z">
+<meta property="article:modified_time" content="2022-07-22T12:37:43.182Z">
+<meta property="article:author" content="Qi">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pytorch">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Pytorch官方文档学习笔记_4_Autograd - 淇水汤汤</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>淇水汤汤</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Pytorch官方文档学习笔记_4_Autograd"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-22 20:06" pubdate>
+          2022年7月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Pytorch官方文档学习笔记_4_Autograd</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-使用-torch-autograd-进行自动微分"><a href="#1-使用-torch-autograd-进行自动微分" class="headerlink" title="1. 使用 torch.autograd 进行自动微分"></a>1. 使用 <strong>torch.autograd</strong> 进行自动微分</h1><p>在训练神经网络时，最常用的算法是反向传播。在该算法中，参数（模型权重）根据损失函数相对于给定参数的梯度进行调整。</p>
+<p>为了计算这些梯度，PyTorch 有一个名为 <strong>torch.autograd</strong> 的内置微分引擎。它支持任何计算图的梯度自动计算。</p>
+<p>考虑最简单的一层神经网络，输入 x、参数 w 和 b，以及一些损失函数。它可以通过以下方式在 PyTorch 中定义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br>x = torch.ones(<span class="hljs-number">5</span>)  <span class="hljs-comment"># input tensor</span><br>y = torch.zeros(<span class="hljs-number">3</span>)  <span class="hljs-comment"># expected output</span><br>w = torch.randn(<span class="hljs-number">5</span>, <span class="hljs-number">3</span>, requires_grad=<span class="hljs-literal">True</span>)<br>b = torch.randn(<span class="hljs-number">3</span>, requires_grad=<span class="hljs-literal">True</span>)<br>z = torch.matmul(x, w)+b<br>loss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)<br></code></pre></td></tr></table></figure>
+
+<h1 id="2-张量、函数和计算图"><a href="#2-张量、函数和计算图" class="headerlink" title="2. 张量、函数和计算图"></a>2. 张量、函数和计算图</h1><p>上述代码定义了以下计算图：</p>
+<center>![computer_graph](/post_img/Pytorch官方文档学习笔记_4_Autograd/computer_graph.png)</center>
+
+<p>在这个网络中，$w$ 和 $b$ 是我们需要优化的参数。因此，我们需要能够计算损失函数相对于这些变量的梯度。为此，我们设置了这些张量的 <strong>requires_grad</strong> 属性。</p>
+<p>Note: 可以在创建张量时设置 <strong>requires_grad</strong> 的值，或者稍后使用 <strong>x.requires_grad_(True)</strong> 方法设置。</p>
+<p>我们应用于张量以构建计算图的函数实际上是Function类的对象。这个对象知道如何计算正向的函数，以及如何在反向传播步骤中计算它的导数。对反向传播函数的引用存储在张量的 <strong>grad_fn</strong> 属性中。您可以在<a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/autograd.html#function">这里</a>中找到更多关于 Function 的信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Gradient function for z = <span class="hljs-subst">&#123;z.grad_fn&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Gradient function for loss = <span class="hljs-subst">&#123;loss.grad_fn&#125;</span>&quot;</span>)<br><br>out: <br>&gt;&gt; Gradient function <span class="hljs-keyword">for</span> z = &lt;AddBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7f885ddab210</span>&gt;<br>&gt;&gt; Gradient function <span class="hljs-keyword">for</span> loss = &lt;BinaryCrossEntropyWithLogitsBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7f885d8a1b90</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="3-计算梯度"><a href="#3-计算梯度" class="headerlink" title="3. 计算梯度"></a>3. 计算梯度</h1><p>为了优化神经网络中参数的权重，我们需要计算我们的损失函数对参数的导数。为了计算这些导数，我们调用 **loss.backward()**，然后从 <strong>w.grad</strong> 和 <strong>b.grad</strong> 中取值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python">loss.backward()<br><span class="hljs-built_in">print</span>(w.grad)<br><span class="hljs-built_in">print</span>(b.grad)<br><br>out: <br>&gt;&gt; tensor([[<span class="hljs-number">0.1702</span>, <span class="hljs-number">0.0790</span>, <span class="hljs-number">0.0602</span>],<br>           [<span class="hljs-number">0.1702</span>, <span class="hljs-number">0.0790</span>, <span class="hljs-number">0.0602</span>],<br>           [<span class="hljs-number">0.1702</span>, <span class="hljs-number">0.0790</span>, <span class="hljs-number">0.0602</span>],<br>           [<span class="hljs-number">0.1702</span>, <span class="hljs-number">0.0790</span>, <span class="hljs-number">0.0602</span>],<br>           [<span class="hljs-number">0.1702</span>, <span class="hljs-number">0.0790</span>, <span class="hljs-number">0.0602</span>]])<br>&gt;&gt; tensor([<span class="hljs-number">0.1702</span>, <span class="hljs-number">0.0790</span>, <span class="hljs-number">0.0602</span>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li>我们只能获取计算图叶节点的 <strong>grad</strong> 属性，其中 <strong>requires_grad</strong> 属性设置为 <strong>True</strong>。对于我们图中的所有其他节点，梯度将不可用。</li>
+<li>出于性能原因，我们只能在给定的图上使用一次反向梯度计算。如果我们需要对同一个图进行多次反向调用，我们需要将 <strong>retain_graph&#x3D;True</strong> 传递给反向调用。</li>
+</ul>
+<h1 id="4-禁用梯度跟踪"><a href="#4-禁用梯度跟踪" class="headerlink" title="4. 禁用梯度跟踪"></a>4. 禁用梯度跟踪</h1><p>默认情况下，所有 <strong>requires_grad&#x3D;True</strong> 的张量都在跟踪它们的计算历史并支持梯度计算。但是，在某些情况下我们不需要这样做，例如，当我们训练了模型并且只想将其应用于某些输入数据时，即我们只想通过网络进行前向计算。我们可以通过用 <strong>torch.no_grad()</strong> 块包围我们的计算代码来停止跟踪计算：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">z = torch.matmul(x, w)+b<br><span class="hljs-built_in">print</span>(z.requires_grad)<br><br><span class="hljs-keyword">with</span> torch.no_grad():<br>    z = torch.matmul(x, w)+b<br><span class="hljs-built_in">print</span>(z.requires_grad)<br><br>out: <br>&gt;&gt; <span class="hljs-literal">True</span><br>&gt;&gt; <span class="hljs-literal">False</span><br></code></pre></td></tr></table></figure>
+
+<p>实现相同结果的另一种方法是在张量上使用 detach() 方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">z = torch.matmul(x, w)+b<br>z_det = z.detach()<br><span class="hljs-built_in">print</span>(z_det.requires_grad)<br><br>out: <br>&gt;&gt; <span class="hljs-literal">False</span><br></code></pre></td></tr></table></figure>
+
+<p>您可能希望禁用梯度跟踪的原因如下：</p>
+<ul>
+<li>将神经网络中的某些参数标记为冻结参数。这是微调预训练网络的一个非常常见的场景。</li>
+<li>当您只进行前向传播时加快计算速度，因为在不跟踪梯度的张量上进行计算会更有效。</li>
+</ul>
+<h1 id="5-关于计算图的更多内容"><a href="#5-关于计算图的更多内容" class="headerlink" title="5. 关于计算图的更多内容"></a>5. 关于计算图的更多内容</h1><p>从概念上讲，<strong>autograd</strong>在一个由Function对象组成的有向无环图（DAG）中保存了数据（张量）和所有执行的操作（以及产生的新张量）的记录。在DAG中，叶子是输入张量，根部是输出张量。通过追踪这个图从根到叶，你可以使用链式规则自动计算梯度。</p>
+<p>在前向传播中，<strong>autograd</strong> 同时做两件事：</p>
+<ul>
+<li>运行请求操作以计算结果张量</li>
+<li>在 DAG 中保持操作的梯度函数</li>
+</ul>
+<p>当在DAG根部调用.backward()时，反向传播就会启动：</p>
+<ul>
+<li>从每个 <strong>.grad_fn</strong> 计算梯度</li>
+<li>将它们累积在相应张量的 <strong>.grad</strong> 属性中</li>
+<li>使用链式法则，一直传播到叶张量</li>
+</ul>
+<p><strong>Note</strong>: <strong>DAG 在 PyTorch 中是动态的</strong> 需要注意的是，图形是从头开始重新创建的；在每次调用 <strong>.backward()</strong> 后，autograd开始填充一个新的图形。这正是允许你在模型中使用控制流语句的原因；如果需要，你可以在每次迭代时改变形状、大小和操作。</p>
+<h1 id="选读：张量梯度和雅可比积"><a href="#选读：张量梯度和雅可比积" class="headerlink" title="选读：张量梯度和雅可比积"></a>选读：张量梯度和雅可比积</h1><p>在许多情况下，我们有一个标量损失函数，我们需要计算相对于某些参数的梯度。然而，有些情况下，输出函数是一个任意的张量。在这种情况下，PyTorch允许你计算所谓的<strong>雅可比乘积</strong>，而不是实际的梯度。</p>
+<p>对于一个向量函数$\vec y&#x3D;f(\vec x)$，其中$\vec x&#x3D;&lt;x_1,…,x_2&gt;$，$\vec y&#x3D;&lt;y_1,…,y_2&gt;$，$\vec y$ 的梯度是关于 $\vec x$ 的雅可比矩阵给出的：<br>$$<br>J&#x3D;\left(\begin{array}{ccc}<br>\frac{\partial y_{1}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{1}}{\partial x_{n}} \<br>\vdots &amp; \ddots &amp; \vdots \<br>\frac{\partial y_{m}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{m}}{\partial x_{n}}<br>\end{array}\right)<br>$$<br>对于给定的输入向量$\vec v&#x3D;(v_1,…,v_m)$，PyTorch允许您计算雅可比乘积 $v^T\cdot J$ 而不是计算雅可比矩阵本身。这是通过使用 $v$ 作为参数调用 <strong>backward</strong> 来实现的。 $v$​  的大小应该与我们想要计算乘积的原始张量的大小相同：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">inp = torch.eye(<span class="hljs-number">5</span>, requires_grad=<span class="hljs-literal">True</span>)<br>out = (inp+<span class="hljs-number">1</span>).<span class="hljs-built_in">pow</span>(<span class="hljs-number">2</span>)<br>out.backward(torch.ones_like(inp), retain_graph=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;First call\n<span class="hljs-subst">&#123;inp.grad&#125;</span>&quot;</span>)<br>out.backward(torch.ones_like(inp), retain_graph=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\nSecond call\n<span class="hljs-subst">&#123;inp.grad&#125;</span>&quot;</span>)<br>inp.grad.zero_()<br>out.backward(torch.ones_like(inp), retain_graph=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\nCall after zeroing gradients\n<span class="hljs-subst">&#123;inp.grad&#125;</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>Out: </p>
+<blockquote>
+<p>First call<br> tensor([[4., 2., 2., 2., 2.],<br>       [2., 4., 2., 2., 2.],<br>       [2., 2., 4., 2., 2.],<br>       [2., 2., 2., 4., 2.],<br>       [2., 2., 2., 2., 4.]])</p>
+<p>Second call<br> tensor([[8., 4., 4., 4., 4.],<br>       [4., 8., 4., 4., 4.],<br>       [4., 4., 8., 4., 4.],<br>       [4., 4., 4., 8., 4.],<br>       [4., 4., 4., 4., 8.]])</p>
+<p>Call after zeroing gradients<br> tensor([[4., 2., 2., 2., 2.],<br>       [2., 4., 2., 2., 2.],<br>       [2., 2., 4., 2., 2.],<br>       [2., 2., 2., 4., 2.],<br>       [2., 2., 2., 2., 4.]])</p>
+</blockquote>
+<p>请注意，当我们第二次以相同的参数调用 <strong>backward</strong> 时，梯度的值是不同的。这是因为在进行反向传播时，PyTorch会累积梯度，也就是说，计算出的梯度值会加到计算图的所有叶子节点的梯度属性中。如果你想计算正确的梯度，你需要在之前将梯度属性清零。在现实的训练中，优化器可以帮助我们做到这一点。</p>
+<p><strong>Note</strong>: 之前我们在调用 <strong>backward()</strong> 函数的时候是没有参数的。这基本上等同于调用 <strong>backward(torch.tensor(1.0))</strong> ，这是在标量值函数的情况下计算梯度的有效方法，比如神经网络训练中的损失。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/pytorch/" class="category-chain-item">pytorch</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/">#python</a>
+      
+        <a href="/tags/pytorch/">#pytorch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Pytorch官方文档学习笔记_4_Autograd</div>
+      <div>http://example.com/2022/07/22/Pytorch官方文档学习笔记-4-Autograd/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Qi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月22日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/22/Pytorch%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-5-Optimization/" title="Pytorch官方文档学习笔记_5_Optimization">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Pytorch官方文档学习笔记_5_Optimization</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/21/Pytorch%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3-Build-Model/" title="Pytorch官方文档学习笔记_3_Build Model">
+                        <span class="hidden-mobile">Pytorch官方文档学习笔记_3_Build Model</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
